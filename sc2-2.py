@@ -21,7 +21,7 @@ class MineralBot(BotAI):
             ):
                 await self.build(UnitTypeId.PYLON, near=random.choice(self.townhalls))
 
-        # Build workers
+        # Build workers - look into Unit.surplus_harvester property for distributing workers
         if self.can_afford(UnitTypeId.PROBE):
             for nexus in self.townhalls:
                 worker_count = len(self.workers.closer_than(10, nexus))
@@ -36,6 +36,25 @@ class MineralBot(BotAI):
             self.can_afford(UnitTypeId.NEXUS)
         ):
             await self.expand_now()
+
+        # Create gateways
+        if self.can_afford(UnitTypeId.GATEWAY):
+            await self.build(UnitTypeId.GATEWAY, near=random.choice(self.structures(UnitTypeId.PYLON)))
+
+        # Build zealots
+        if self.can_afford(UnitTypeId.ZEALOT):
+            for gateway in self.structures(UnitTypeId.GATEWAY):
+                gateway.train(UnitTypeId.ZEALOT)
+
+        # Send zealots to attack once there is 10 zealots
+        if len(self.units(UnitTypeId.ZEALOT)) >= 10:
+            for zealot in self.units(UnitTypeId.ZEALOT):
+                zealot.attack(self.enemy_start_locations[0])
+
+
+    def mining_rate(self):
+        mineral_rate = self.workers * 55
+        return mineral_rate, 0
 
 
 run_game(

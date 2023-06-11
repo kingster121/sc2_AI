@@ -11,3 +11,6 @@ Micro:
 - Inputs: [minimap, ]
 - Outputs: []
 - Reward: Look into 5 mins of gametime
+
+\
+Should also implement a Micro queue so that my AI could queue actions, but only the first 3 action would be completed per frame (3APM)
