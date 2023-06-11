@@ -13,15 +13,26 @@ import random
 
 
 class MineralBot(BotAI):
-    async def on_step(self):
+    async def on_step(self, iteration: int):  # Iterate every step of the game
+        # Build pylon
         if self.supply_left < 4:
-            # build pylons.
-            if self.already_pending(UnitTypeId.PYLON) == 0:
-                if self.can_afford(UnitTypeId.PYLON):
-                    await self.build(
-                        UnitTypeId.PYLON, near=random.choice(self.townhalls)
-                    )
-                    found_something = True
+            if (self.already_pending(UnitTypeId.PYLON) == 0) and (
+                self.can_afford(UnitTypeId.PYLON)
+            ):
+                await self.build(UnitTypeId.PYLON, near=random.choice(self.townhalls))
+
+        # Build workers
+        if (self.already_pending(UnitTypeId.PROBE)) and (
+            self.can_afford(UnitTypeId.PROBE)
+        ):
+            for nexus in self.townhalls:
+                
+
+        # Build Nexus
+        if (self.already_pending(UnitTypeId.NEXUS) == 0) and (
+            self.can_afford(UnitTypeId.NEXUS)
+        ):
+            await self.expand_now()
 
 
 run_game(
